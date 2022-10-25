@@ -18,8 +18,8 @@ public class UserDaoFactory {
         SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
         dataSource.setDriverClass(com.mysql.cj.jdbc.Driver.class);
         dataSource.setUrl(env.get("DB_HOST"));
-        dataSource.setUsername("DB_USER");
-        dataSource.setPassword("DB_PASSWORD");
+        dataSource.setUsername(env.get("DB_USER"));
+        dataSource.setPassword(env.get("DB_PASSWORD"));
         return dataSource;
     }
 }
