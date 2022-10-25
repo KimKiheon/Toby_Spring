@@ -34,6 +34,10 @@ public class UserDao {
         jdbcContextWithStatementStrategy(new AddStrategy(user));
     }
 
+    public void deleteAll() throws SQLException {
+        jdbcContextWithStatementStrategy(new DeleteAllStrategy());
+    }
+
     public User findById(String id) throws SQLException {
         c = connectionMaker.connectionMaker();
         ps = c.prepareStatement("select *from users where id = ?");
