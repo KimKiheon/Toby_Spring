@@ -25,7 +25,7 @@ public class UserDao {
     };
 
     public void add(User user){
-        this.jdbcTemplate.update("insert into users (id, name, pasword) values (?,?,?);",
+        this.jdbcTemplate.update("insert into users (id, name, password) values (?,?,?);",
                 user.getId(), user.getName(), user.getPassword());
     }
 
@@ -34,7 +34,7 @@ public class UserDao {
     }
 
     public int getCount(){
-        return this.jdbcTemplate.queryForObject("select count)*)from users;",Integer.class);
+        return this.jdbcTemplate.queryForObject("select count(*)from users;",Integer.class);
     }
 
     public User findById(String id) {

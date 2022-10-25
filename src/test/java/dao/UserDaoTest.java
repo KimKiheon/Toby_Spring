@@ -37,5 +37,6 @@ public class UserDaoTest {
         userDao.add(user2);
         userDao.add(user3);
         Assertions.assertEquals(3,userDao.getCount());
+        userDao.deleteAll();
     }
 }
