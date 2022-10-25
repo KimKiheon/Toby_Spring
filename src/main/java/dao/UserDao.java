@@ -1,17 +1,14 @@
 package dao;
 
 import domain.User;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
+
 
 public class UserDao {
     private JdbcTemplate jdbcTemplate;
@@ -19,6 +16,13 @@ public class UserDao {
     public UserDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
+    RowMapper<User> rowMapper = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+            User user = new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
+            return user;
+        }
+    };
 
     public void add(User user){
         this.jdbcTemplate.update("insert into users (id, name, pasword) values (?,?,?);",
@@ -34,26 +38,12 @@ public class UserDao {
     }
 
     public User findById(String id) {
-        String sql = "select *from users where id = ?";
-        RowMapper<User> rowMapper = new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                User user = new User(rs.getString("id"), rs.getString("name"), rs.getString("password"));
-                return user;
-            }
-        };
-        return this.jdbcTemplate.queryForObject(sql, rowMapper, id);
+        String sql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
     }
 
     public List<User> getAll(){
         String sql = "select *from users order by id";
-        RowMapper<User> rowMapper = new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-                User user = new User(rs.getString("id"),rs.getString("name"),rs.getString("password"));
-                return user;
-            }
-        };
         return this.jdbcTemplate.query(sql, rowMapper);
     }
 }
