@@ -15,10 +15,12 @@ public class UserDao {
     private Connection c;
     private PreparedStatement ps;
     private final DataSource dataSource;
+    private final JdbcContext jdbcContext;
 
 
     public UserDao(DataSource dataSource){
         this.dataSource=dataSource;
+        this.jdbcContext=new JdbcContext(dataSource);
     }
 
     public void jdbcContextWithStatementStrategy(StatementStrategy st) throws SQLException {
@@ -30,7 +32,7 @@ public class UserDao {
     }
 
     public void add(User user) throws SQLException {
-        jdbcContextWithStatementStrategy(new StatementStrategy() {
+        jdbcContext.workWithStatementStrategy(new StatementStrategy() {
             @Override
             public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
                 ps=c.prepareStatement("insert into users (id,name,password) values(?,?,?)");
