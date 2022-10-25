@@ -30,11 +30,21 @@ public class UserDao {
     }
 
     public void add(User user) throws SQLException {
-        jdbcContextWithStatementStrategy(new AddStrategy(user));
+        jdbcContextWithStatementStrategy(new StatementStrategy() {
+            @Override
+            public PreparedStatement makePreparedStatement(Connection c) throws SQLException {
+                ps=c.prepareStatement("insert into users (id,name,password) values(?,?,?)");
+                ps.setString(1,user.getId());
+                ps.setString(2,user.getName());
+                ps.setString(3,user.getPassword());
+                return ps;
+            }
+        });
     }
 
     public void deleteAll() throws SQLException {
-        jdbcContextWithStatementStrategy(new DeleteAllStrategy());
+        jdbcContextWithStatementStrategy
+                (c->c.prepareStatement("delete from users"));
     }
 
     public User findById(String id) throws SQLException {
