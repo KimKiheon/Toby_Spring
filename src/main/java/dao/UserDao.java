@@ -3,6 +3,7 @@ package dao;
 import domain.User;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,18 +14,16 @@ public class UserDao {
     private ConnectionMaker connectionMaker;
     private Connection c;
     private PreparedStatement ps;
+    private final DataSource dataSource;
 
-    public UserDao() {
-        this.connectionMaker = new AwsConnectionMaker();
-    }
 
-    public UserDao(ConnectionMaker connectionMaker) {
-        this.connectionMaker = connectionMaker;
+    public UserDao(DataSource dataSource){
+        this.dataSource=dataSource;
     }
 
     public void jdbcContextWithStatementStrategy(StatementStrategy st) throws SQLException {
-        Connection c = connectionMaker.connectionMaker();
-        PreparedStatement ps = st.makePreparedStatement(c);
+        c=dataSource.getConnection();
+        ps=st.makePreparedStatement(c);
         ps.executeUpdate();
         ps.close();
         c.close();

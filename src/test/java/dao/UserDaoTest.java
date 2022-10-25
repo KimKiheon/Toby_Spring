@@ -34,5 +34,6 @@ public class UserDaoTest {
         User selectedUser = userDao.findById(id);
         Assertions.assertEquals("spring",selectedUser.getName());
         Assertions.assertEquals("1123",selectedUser.getPassword());
+        userDao.deleteAll();
     }
 }
