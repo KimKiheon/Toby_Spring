@@ -3,6 +3,7 @@ package dao;
 
 import domain.User;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,15 @@ import java.sql.SQLException;
 public class UserDaoTest {
     @Autowired
     ApplicationContext context;
+    UserDao userDao;
+    @BeforeEach
+    void setUp(){
+        this.userDao = context.getBean("awsUserDao",UserDao.class);
+    }
 
     @Test
     void addAndSelect() throws SQLException{
-        UserDao userDao = context.getBean("awsUserDao",UserDao.class);
+
         String id = "333";
         User user = new User(id,"spring","1123");
         userDao.add(user);
